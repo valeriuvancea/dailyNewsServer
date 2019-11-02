@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc index.ts sqlWorker.ts && node index.js"
+    "start": "tsc && node bin/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "typescript": "^3.6.4",
     "mssql": "^5.1.0",
     "@types/mssql": "^4.3.1",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "rss-parser": "^3.7.3"
   }
 }

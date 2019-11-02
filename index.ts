@@ -1,48 +1,32 @@
-const express = require("express");
-import executeQuery from "./sqlWorker";
-const app = express();
-import * as sql from "mssql";
-import { Request, Response } from 'express';
+import {Application} from "express";
 require('dotenv').config();
+const express = require("express");
+const app:Application = express();
 
-var port = process.env.PORT || 8080;
+const getUsers = require('./api/getUsers');
+getUsers.set(app);
 
-app.get('/users', async (request:Request, response:Response) => {
-    const username:string = request.query.username;
-    const password:string = request.query.password;
+const deleteUser = require('./api/deleteUser');
+deleteUser.set(app);
 
-    if(username != undefined && password != undefined) {
-         const sqlQueryResponse:sql.IResult<any> | Error = 
-         await executeQuery(`SELECT * FROM users WHERE username='${username}' AND password='${password}'`);
+const createUser = require('./api/createUser');
+createUser.set(app);
 
-         if(sqlQueryResponse instanceof  Error) {
-            return response.status(500).json({
-                error: sqlQueryResponse.stack
-            })
-         }
-         else {
-             if (sqlQueryResponse.recordset.length > 0)
-             {
-                 return response.json({
-                     userId: "1"
-                 })
-             }
-             else
-             {
-                 return response.status(404).json({
-                     error: "User with given password not found!"
-                 })
-             }
-         }
-    }
-    else
-    {
-        return response.status(412).json({
-            error: "username and password fields not provided!"
-        })
-    }
-})
+const getUserCategories = require('./api/getUserCategories');
+getUserCategories.set(app);
 
-app.listen(port, function() {
+const getUserNews = require('./api/getUserNews');
+getUserNews.set(app);
+
+const linkUserWithCategory = require('./api/linkUserWithCategory');
+linkUserWithCategory.set(app);
+
+const unlinkUserWithCategory = require('./api/unlinkUserFromCategory');
+unlinkUserWithCategory.set(app);
+
+const port = process.env.PORT || 8080;
+
+app.listen(port, function () {
     console.log('Our app is running on http://localhost:' + port);
 });
+
