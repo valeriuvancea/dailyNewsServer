@@ -9,7 +9,7 @@ module.exports.set = function (app: Application) {
 
         if (username != undefined && password != undefined) {
             const sqlQueryResponse: sql.IResult<any> | Error =
-                await executeQuery(`INSERT INTO users (username, password) VALUES ('${username}', '${password}')`);
+                await executeQuery(`INSERT INTO users (username, password) VALUES ('${username}', '${password}') SELECT @@IDENTITY as userId`);
 
             if (sqlQueryResponse instanceof Error) {
                 return response.status(500).json({
@@ -17,8 +17,8 @@ module.exports.set = function (app: Application) {
                 })
             }
             else {
-                if (sqlQueryResponse.rowsAffected.length > 0) {
-                    return response.json(sqlQueryResponse)
+                if (sqlQueryResponse.recordset.length > 0) {
+                    return response.json(sqlQueryResponse.recordset)
                 }
                 else {
                     return response.status(404).json({
