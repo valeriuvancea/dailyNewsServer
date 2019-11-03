@@ -50,17 +50,18 @@ module.exports.set = function (app: Application) {
                                 })   
                             }
 
+                            const dateOptions:any = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                             parserResult.items.forEach((item:any) =>{
                                 news.push({
                                     category: record.name,
                                     title: item.title,
-                                    pubDate: item.pubDate,
+                                    pubDate: new Date(item.pubDate).toLocaleString('en-GB', dateOptions),
                                     link: item.link
                                 });
                             })
                         }
 
-                        news = news.sort((a, b) => (new Date(a.date) as any) - (new Date(b.date) as any));
+                        news = news.sort((a, b) => Date.parse(b.pubDate) - Date.parse(a.pubDate));
                        
                         return response.json(news)
                     }
